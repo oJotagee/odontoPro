@@ -1,17 +1,10 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { ArrowRight } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
+
+import { Card, CardContent } from "@/components/ui/card"
 
 import fotoImage from "../../../../public/foto1.png"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
 
 export function Professionals() {
   return (

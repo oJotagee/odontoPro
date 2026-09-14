@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react"
 import { LogIn, Menu } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
@@ -13,10 +14,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-export function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+import { handleRegister } from "../_actions/login"
 
-  const session = null;
+export function Header() {
+  const { data: session, status } = useSession()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const navItems = [
     { href: "#profissionais", label: "Profissionais" }
@@ -38,21 +40,30 @@ export function Header() {
         </Button>
       ))}
 
-      {session ? (
+      {status === "loading" ? (
+        <></>
+      ) : session ? (
         <Link
           href="/dashboard"
-          className="flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 bg-zinc-900 text-white py-1 px-4 rounded-md"
         >
           Acessar clinica
         </Link>
       ) : (
-        <Button className="flex items-center justify-center gap-2">
+        <Button 
+          className="flex items-center justify-center gap-2 cursor-pointer"
+          onClick={handleLogin}
+        >
           <LogIn />
           Portal da clinica
         </Button>
       )}
     </>
   )
+
+  async function handleLogin() {
+    await handleRegister("github")
+  }
 
   return (
     <header 
@@ -90,7 +101,7 @@ export function Header() {
             className="w-[240px] sm:w-[300px] z-[9999]"
           >
             <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
+              <SheetTitle className="font-bold">Menu</SheetTitle>
               <SheetDescription>
                 Veja nossos links.
               </SheetDescription>
