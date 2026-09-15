@@ -154,9 +154,10 @@ export function SidebarDashboard({ children }: { children: React.ReactNode }) {
               <SheetTrigger
                 render={
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     className="md:hidden"
+                    onClick={() => setIsCollapsed(false)}
                   />
                 }
               >

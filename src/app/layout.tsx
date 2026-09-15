@@ -1,5 +1,6 @@
 import { Geist_Mono } from "next/font/google";
 import type { Metadata } from "next";
+import { Toaster } from "sonner"
 
 import { SessionAuthProvider } from "@/components/session-auth"
 
@@ -23,6 +24,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <SessionAuthProvider>
+          <Toaster
+            duration={2500}
+          />
+          
           {children}
         </SessionAuthProvider>
       </body>
