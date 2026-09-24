@@ -1,5 +1,7 @@
 "use client"
 
+import { useSession, signOut } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import { ArrowRight } from "lucide-react"
 import { useState } from "react"
 import Image from "next/image"
@@ -63,6 +65,9 @@ export function ProfileContent({ user }: ProfileContentProps) {
   const [selectedHour, setSelectedHour] = useState<string[]>(user.times || []) 
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
 
+  const { update } = useSession()
+  const router = useRouter()
+
   function generateTimeSlots(): string[] {
     const hours: string[] = []
 
@@ -113,6 +118,12 @@ export function ProfileContent({ user }: ProfileContentProps) {
     }
 
     toast.success(response.data)
+  }
+
+  async function handleLogout() {
+    await signOut()
+    await update()
+    router.replace("/")
   }
 
   return (
@@ -306,6 +317,16 @@ export function ProfileContent({ user }: ProfileContentProps) {
           </Card>
         </form>
       </Form>
+
+      <section className="mt-4">
+        <Button
+          variant="destructive"
+          onClick={handleLogout}
+          className="cursor-pointer"
+        >
+          Sair da conta
+        </Button>
+      </section>
     </div>
   )
 }
