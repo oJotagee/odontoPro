@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner"
 
 import { SessionAuthProvider } from "@/components/session-auth"
+import { QueryClientContext } from "@/providers/query-client"
 
 import "./globals.css";
 
@@ -24,11 +25,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <SessionAuthProvider>
-          <Toaster
-            duration={2500}
-          />
-          
-          {children}
+          <QueryClientContext>
+            <Toaster
+              duration={2500}
+            />
+            
+            {children}
+          </QueryClientContext>
         </SessionAuthProvider>
       </body>
     </html>
