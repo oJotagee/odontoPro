@@ -126,7 +126,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
         <div className="max-w-2xl mx-auto">
           <article className="flex flex-col items-center">
             <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-white mb-8">
-              <Image 
+              <Image
                 src={clinic.image ?? "/foto1.png"}
                 alt="Foto da clinica"
                 className="object-cover"
@@ -147,7 +147,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
 
       <section className="max-w-2xl mx-auto w-full mt-6">
         <Form {...form}>
-          <form 
+          <form
             autoComplete="off"
             className="mx-2 space-y-6 bg-white p-6 border rounded-md shadow-md"
             onSubmit={form.handleSubmit(handleRegisterAppointment)}
@@ -159,10 +159,10 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <FormItem>
                   <FormLabel className="font-semibold">Nome:</FormLabel>
                   <FormControl>
-                    <Input 
+                    <Input
                       id="name"
                       autoComplete="name"
-                      {...field} 
+                      {...field}
                       placeholder="Digite seu nome completo"
                     />
                   </FormControl>
@@ -170,7 +170,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="email"
@@ -178,10 +178,10 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <FormItem>
                   <FormLabel className="font-semibold">Email:</FormLabel>
                   <FormControl>
-                    <Input 
+                    <Input
                       id="email"
                       autoComplete="email"
-                      {...field} 
+                      {...field}
                       placeholder="Digite seu email"
                     />
                   </FormControl>
@@ -189,7 +189,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="phone"
@@ -197,23 +197,23 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 <FormItem>
                   <FormLabel className="font-semibold">Telefone:</FormLabel>
                   <FormControl>
-                    <Input 
+                    <Input
                       id="phone"
                       autoComplete="tel"
-                      {...field} 
+                      {...field}
                       placeholder="(XX) XXXXX-XXXX"
                       onChange={(e) => {
                         const formattedPhone = formatPhone(e.target.value)
 
                         field.onChange(formattedPhone)
-                      }} 
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="date"
@@ -236,7 +236,7 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="serviceId"
@@ -288,8 +288,8 @@ export function ScheduleContent({ clinic }: ScheduleContentProps) {
                       selectedTime={selectedTime}
                       selectedDate={selectedDate}
                       requiredSlots={
-                        clinic.services.find(service => service.id === selectedServiceId) 
-                          ? Math.ceil(clinic.services.find(service => service.id === selectedServiceId)!.duration / 30) 
+                        clinic.services.find(service => service.id === selectedServiceId)
+                          ? Math.ceil(clinic.services.find(service => service.id === selectedServiceId)!.duration / 30)
                           : 1
                       }
                       onSelectTime={(time) => setSelectedTime(time)}
