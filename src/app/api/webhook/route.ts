@@ -1,0 +1,72 @@
+import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+
+import { SubscriptionPlan } from "../../../../generated/prisma/enums";
+import { manageSubscription } from "@/utils/manage-subscription";
+import { stripe } from "@/utils/stripe";
+
+export const POST = async (request: Request) => {
+  const sinature = request.headers.get("stripe-signature");
+  if (!sinature) {
+    return NextResponse.error()
+  }
+
+  console.log("webhook iniciando....");
+
+  const text = await request.text();
+
+  const event = stripe.webhooks.constructEvent(
+    text,
+    sinature,
+    process.env.STRIPE_SECRET_WEBHOOK_KEY as string
+  );
+
+  switch (event.type) {
+    case "customer.subscription.deleted": {
+      const payment = event.data.object as Stripe.Subscription;
+
+      await manageSubscription(
+        payment.id,
+        payment.customer.toString(),
+        false,
+        true
+      );
+
+      break
+    }
+    case "customer.subscription.updated": {
+      const paymentIntent = event.data.object as Stripe.Subscription;
+
+      await manageSubscription(
+        paymentIntent.id,
+        paymentIntent.customer.toString(),
+        false
+      );
+
+      break;
+    }
+    case "checkout.session.completed": {
+      const checkoutSession = event.data.object as Stripe.Checkout.Session;
+      const type = checkoutSession.metadata?.type ? checkoutSession.metadata.type : "BASIC";
+
+      if(checkoutSession.subscription && checkoutSession.customer) {
+        await manageSubscription(
+          checkoutSession.subscription.toString(),
+          checkoutSession.customer.toString(),
+          true,
+          false,
+          type as SubscriptionPlan,
+  			);
+      }
+
+      break;
+    }
+    default:
+      console.log("Evento não reconhecido", event.type);
+  }
+
+  revalidatePath("/dashboard/plans");
+
+  return NextResponse.json({ received: true });
+}
