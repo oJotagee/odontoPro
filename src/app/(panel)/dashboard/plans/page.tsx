@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { getSubscription } from "@/utils/get-subscription"
 import { GridPlans } from "./_components/grid-plans"
 import getSession from "@/lib/getSession"
+import { SubscriptionDetails } from "./_components/subscription-details"
 
 export default async function Plans() {
   const session = await getSession()
@@ -17,7 +18,7 @@ export default async function Plans() {
       )}
 
       {subscription?.status === "active" && (
-        <h1>Você tem uma assinatura ativa</h1>
+        <SubscriptionDetails subscription={subscription!} />
       )}
     </div>
   )

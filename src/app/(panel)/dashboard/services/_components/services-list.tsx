@@ -1,15 +1,17 @@
 "use client"
 
+import { Pencil, Plus, X } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import Link from "next/link";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Service } from "../../../../../../generated/prisma/client";
+import type { ResultPermissionProp } from "@/utils/permissions/can-permission";
+import type { Service } from "../../../../../../generated/prisma/client";
 import { convertCentsToReal } from "@/utils/convertCurrency";
 import { deleteService } from "../_actions/delete-service";
 import { DialogService } from "./dialog-service";
 import { Button } from "@/components/ui/button";
-import { Pencil, Plus, X } from "lucide-react";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -18,11 +20,14 @@ import {
 
 interface ServicesListProps {
   services: Service[];
+  permissions: ResultPermissionProp;
 }
 
-export function ServicesList({ services }: ServicesListProps) {
+export function ServicesList({ services, permissions }: ServicesListProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
+
+  const servicesList = permissions.hasPermission ? services : services.slice(0, 3);
 
   async function handleDeleteService(serviceId: string) {
     const response = await deleteService({ serviceId });
@@ -54,14 +59,26 @@ export function ServicesList({ services }: ServicesListProps) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-x-0 pb-2">
             <CardTitle className="text-xl md:text-2xl font-bold">Lista de Servicos</CardTitle>
-            <DialogTrigger
-              render={<Button />}
-            >
-              <Plus className="w-4 h-4" />
-            </DialogTrigger>
+            {permissions.hasPermission && (
+              <DialogTrigger
+                render={<Button />}
+                className="cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+              </DialogTrigger>
+            )}
+
+            {!permissions.hasPermission && (
+              <Link
+                href="/dashboard/plans"
+                className="text-red-500 hover:underline"
+              >
+                Limite do plano excedido
+              </Link>
+            )}
 
             <DialogContent>
-              <DialogService 
+              <DialogService
                 closeModal={() => {
                   setIsDialogOpen(false)
                   setEditingService(null);
@@ -79,8 +96,8 @@ export function ServicesList({ services }: ServicesListProps) {
 
           <CardContent>
             <section className="space-y-4">
-              {services.map(service => (
-                <article 
+              {servicesList.map(service => (
+                <article
                   key={service.id}
                   className="flex items-center justify-between"
                 >
@@ -97,6 +114,7 @@ export function ServicesList({ services }: ServicesListProps) {
                       variant={"ghost"}
                       size={"icon"}
                       onClick={() => handleEditService(service)}
+                      className="cursor-pointer"
                     >
                       <Pencil className="w-4 h-4" />
                     </Button>
@@ -104,6 +122,7 @@ export function ServicesList({ services }: ServicesListProps) {
                       variant={"ghost"}
                       size={"icon"}
                       onClick={() => handleDeleteService(service.id)}
+                      className="cursor-pointer"
                     >
                       <X className="w-4 h-4" />
                     </Button>

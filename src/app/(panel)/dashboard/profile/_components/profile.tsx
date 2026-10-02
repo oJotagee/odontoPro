@@ -29,19 +29,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { 
-  Form, 
-  FormControl, 
-  FormDescription, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form"
 
 import { Prisma } from "../../../../../../generated/prisma/browser"
 import { updateProfile } from "../_actions/update-profile"
-import imgTest from "../../../../../../public/foto1.png"
+import { AvatarProfile } from "./profile-avatar"
 
 type UserWithSub = Prisma.UserGetPayload<{
   include: {
@@ -62,7 +62,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
     timeZone: user.timeZone,
   })
 
-  const [selectedHour, setSelectedHour] = useState<string[]>(user.times || []) 
+  const [selectedHour, setSelectedHour] = useState<string[]>(user.times || [])
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
 
   const { update } = useSession()
@@ -92,7 +92,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
     })
   }
 
-  const timeZones = Intl.supportedValuesOf("timeZone").filter((zone) => 
+  const timeZones = Intl.supportedValuesOf("timeZone").filter((zone) =>
     zone.startsWith("America/Sao_Paulo") ||
     zone.startsWith("America/Fortaleza") ||
     zone.startsWith("America/Recife") ||
@@ -111,7 +111,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
       phone: values.phone,
       times: selectedHour || []
     })
-    
+
     if(response.error) {
       toast.error(response.error)
       return;
@@ -136,14 +136,10 @@ export function ProfileContent({ user }: ProfileContentProps) {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-center">
-                <div className="bg-gray-200 relative w-40 h-40 rounded-full overflow-hidden">
-                  <Image 
-                    src={user.image ? user.image : imgTest} 
-                    alt="Profile Picture" 
-                    fill
-                    className="object-cover" 
-                  />
-                </div>
+                <AvatarProfile
+                  avatarUrl={user.image}
+                  userId={user.id}
+                />
               </div>
 
               <div className="space-y-4">
@@ -161,7 +157,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={profileForm.control}
                   name="address"
@@ -176,7 +172,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={profileForm.control}
                   name="phone"
@@ -184,13 +180,13 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     <FormItem>
                       <FormLabel className="font-semibold">Celular:</FormLabel>
                       <FormControl>
-                        <Input 
-                          {...field} 
+                        <Input
+                          {...field}
                           onChange={(e) => {
                             const formattedPhone = formatPhone(e.target.value)
 
                             field.onChange(formattedPhone)
-                          }} 
+                          }}
                         />
                       </FormControl>
                       <FormDescription>Digite seu número de celular.</FormDescription>
@@ -231,7 +227,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
                   <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
                     <DialogTrigger
                       render={
-                        <Button 
+                        <Button
                           variant={"outline"}
                           className="w-full justify-between"
                         />
