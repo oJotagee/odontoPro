@@ -15,6 +15,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "OdontoPRO",
   description: "Portal da clínica OdontoPRO",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+  },
+  openGraph: {
+    title: "OdontoPRO",
+    description: "Portal da clínica OdontoPRO",
+    images: [`${process.env.NEXT_PUBLIC_BASE_URL}/public/doctor-hero.png`],
+  }
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -29,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Toaster
               duration={2500}
             />
-            
+
             {children}
           </QueryClientContext>
         </SessionAuthProvider>
