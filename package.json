@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "stripe:listen": "stripe listen --all-snapshot --forward-to localhost:3000/api/webhook",
-    "build": "next build",
+    "build": "prisma generate && npx prisma migrate deploy && next build",
     "start": "next start",
+    "postinstall": "prisma generate",
     "lint": "eslint"
   },
   "dependencies": {
