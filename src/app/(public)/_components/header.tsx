@@ -50,7 +50,7 @@ export function Header() {
           Acessar clinica
         </Link>
       ) : (
-        <Button 
+        <Button
           className="flex items-center justify-center gap-2 cursor-pointer"
           onClick={handleLogin}
         >
@@ -62,15 +62,15 @@ export function Header() {
   )
 
   async function handleLogin() {
-    await handleRegister("github")
+    await handleRegister("google")
   }
 
   return (
-    <header 
+    <header
       className="fixed top-0 right-0 left-0 z-[999] py-4 px-6 bg-white"
     >
       <div className="container mx-auto flex items-center justify-between">
-        <Link 
+        <Link
           href="/"
           className="text-3xl font-bold text-zinc-900"
         >
@@ -106,7 +106,7 @@ export function Header() {
                 Veja nossos links.
               </SheetDescription>
             </SheetHeader>
-            
+
             <nav className="flex flex-col space-y-4 mt-6 px-4">
               <NavLinks />
             </nav>
@@ -114,5 +114,5 @@ export function Header() {
         </Sheet>
       </div>
     </header>
-  )  
+  )
 }

@@ -4,6 +4,7 @@ import { PlanDetailInfo } from "./get-plans";
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { canCreateService } from "./can-create-service";
+import { checkSubscriptionExpired } from "./check-subscription-expired";
 
 export type PLAN_PROP = "BASIC" | "PROFESSIONAL" | "TRIAL" | "EXPIRED"
 
@@ -38,11 +39,18 @@ export async function canPermission({ type }: CanPermissionProps): Promise<Resul
       }
     })
     if(!subscription) {
-      return {
-        hasPermission: false,
-        planId: "EXPIRED",
-        expired: true,
-        plan: null
+      switch (type) {
+        case "service": {
+          return await checkSubscriptionExpired(session)
+        }
+        default: {
+          return {
+            hasPermission: false,
+            planId: "EXPIRED",
+            expired: true,
+            plan: null
+          }
+        }
       }
     }
 

@@ -2,13 +2,19 @@ import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-
-import { User } from "../../../../generated/prisma/client"
+import { Prisma } from "../../../../generated/prisma/client"
 import { Card, CardContent } from "@/components/ui/card"
 import fotoImage from "../../../../public/foto1.png"
+import { PremiumBadge } from "./premium-badge"
+
+type UserWithSubscription = Prisma.UserGetPayload<{
+  include: {
+    subscription: true
+  }
+}>
 
 interface ProfessionalsProps {
-	professionals: User[];
+	professionals: UserWithSubscription[];
 }
 
 export async function Professionals({ professionals }: ProfessionalsProps) {
@@ -33,18 +39,19 @@ export async function Professionals({ professionals }: ProfessionalsProps) {
                         quality={100}
                         priority
                       />
+
+                      {clinic.subscription && <PremiumBadge />}
                     </div>
                   </div>
 
-                  <div className="p-4 space-y-4">
+                  <div className="p-4 space-y-4 min-w-[160px] flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-semibold">{clinic.name}</h3>
-                        <p className="text-sm text-gray-500">{clinic.address ? clinic.address : "Endereço não informado"}</p>
+                        <h3 className="font-semibold line-clamp-1">{clinic.name}</h3>
+                        <p className="text-sm text-gray-500 line-clamp-1">{clinic.address ? clinic.address : "Endereço não informado"}</p>
                       </div>
-
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
                     </div>
+
 
                     <Link
                       href={`/clinica/${clinic.id}`}
